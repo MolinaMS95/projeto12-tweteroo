@@ -45,7 +45,7 @@ app.post("/sign-up", (req, res) => {
     return;
   }
 
-  if(!isValidUrl(avatar)){
+  if (!isValidUrl(avatar)) {
     res.status(422).send("Use uma URL de imagem válida");
     return;
   }
@@ -106,6 +106,27 @@ app.get("/tweets", (req, res) => {
   }
 
   res.send(tweetList);
+});
+
+app.get("/tweets/:username", (req, res) => {
+  const { username } = req.params;
+  const queryUser = users.find((user) => user.username === username);
+  
+  if(!queryUser){
+    res.status(400).send("Usuário não encontrado");
+    return
+  }
+
+  const userTweets = tweets.filter((tweet) => tweet.username === username);
+  if(userTweets.length===0){
+    res.status(400).send("Não há tweets para esse usuário");
+    return
+  }
+
+  const userImg = queryUser.avatar;
+  userTweets.forEach((tweet) => (tweet.avatar = userImg));
+
+  res.send(userTweets);
 });
 
 app.listen(5000);
