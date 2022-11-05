@@ -32,8 +32,21 @@ app.post("/sign-up", (req, res) => {
     }
   }
 
+  const isValidUrl = (urlString) => {
+    try {
+      return Boolean(new URL(urlString));
+    } catch (e) {
+      return false;
+    }
+  };
+
   if (!username || !avatar) {
     res.status(400).send("Todos os campos devem ser inseridos!");
+    return;
+  }
+
+  if(!isValidUrl(avatar)){
+    res.status(422).send("Use uma URL de imagem válida");
     return;
   }
 
@@ -45,7 +58,7 @@ app.post("/sign-up", (req, res) => {
   const newUser = { username, avatar };
   users.push(newUser);
 
-  res.status(200).send("OK");
+  res.status(201).send("OK");
 });
 
 app.post("/tweets", (req, res) => {
@@ -60,7 +73,7 @@ app.post("/tweets", (req, res) => {
     }
   }
 
-  if (!tweet) {
+  if (!username || !tweet) {
     res.status(400).send("Você deve escrever algo!");
     return;
   }
@@ -73,7 +86,7 @@ app.post("/tweets", (req, res) => {
   const newTweet = { username, tweet };
   tweets.push(newTweet);
 
-  res.status(200).send("OK");
+  res.status(201).send("OK");
 });
 
 app.get("/tweets", (req, res) => {
