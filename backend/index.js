@@ -41,7 +41,7 @@ app.post("/sign-up", (req, res) => {
   };
 
   if (!username || !avatar) {
-    res.status(400).send("Todos os campos devem ser inseridos!");
+    res.status(400).send("Todos os campos são obrigatórios!");
     return;
   }
 
@@ -62,7 +62,8 @@ app.post("/sign-up", (req, res) => {
 });
 
 app.post("/tweets", (req, res) => {
-  const { username, tweet } = req.body;
+  const username = req.headers.user;
+  const tweet = req.body.tweet;
 
   function checkUser() {
     const doExist = users.find((user) => user.username === username);
@@ -74,7 +75,7 @@ app.post("/tweets", (req, res) => {
   }
 
   if (!username || !tweet) {
-    res.status(400).send("Você deve escrever algo!");
+    res.status(400).send("Todos os campos são obrigatórios!");
     return;
   }
 
