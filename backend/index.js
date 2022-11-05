@@ -48,4 +48,32 @@ app.post("/sign-up", (req, res) => {
   res.status(200).send("OK");
 });
 
+app.post("/tweets", (req, res) => {
+  const { username, tweet } = req.body;
+
+  function checkUser() {
+    const doExist = users.find((user) => user.username === username);
+    if (!doExist) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  if (!tweet) {
+    res.status(400).send("Você deve escrever algo!");
+    return;
+  }
+
+  if (checkUser()) {
+    res.status(401).send("Faça login para poder postar");
+    return;
+  }
+
+  const newTweet = { username, tweet };
+  tweets.push(newTweet);
+
+  res.status(200).send("OK");
+});
+
 app.listen(5000);
