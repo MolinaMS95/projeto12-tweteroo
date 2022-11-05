@@ -76,4 +76,23 @@ app.post("/tweets", (req, res) => {
   res.status(200).send("OK");
 });
 
+app.get("/tweets", (req, res) => {
+  const tweetList = [];
+
+  for (let i = tweets.length - 1; i >= 0; i--) {
+    let userImg = users.find(
+      (user) => user.username === tweets[i].username
+    ).avatar;
+
+    let tweet = { ...tweets[i], avatar: userImg };
+    tweetList.push(tweet);
+
+    if (tweetList.length === 10) {
+      break;
+    }
+  }
+
+  res.send(tweetList);
+});
+
 app.listen(5000);
