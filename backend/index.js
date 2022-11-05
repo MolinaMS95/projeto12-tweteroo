@@ -99,28 +99,34 @@ app.get("/tweets", (req, res) => {
 
     let tweet = { ...tweets[i], avatar: userImg };
     tweetList.push(tweet);
-
-    if (tweetList.length === 10) {
-      break;
-    }
   }
 
-  res.send(tweetList);
+  const page = Number(req.query.page);
+  const initialIndex = (page - 1) * 10;
+  const finalIndex = page * 10;
+  const tweetsByPage = tweetList.slice(initialIndex, finalIndex);
+
+  if (page < 1 || isNaN(page) || tweetsByPage.length === 0) {
+    res.status(400).send("Informe uma página válida");
+    return;
+  }
+
+  res.send(tweetsByPage);
 });
 
 app.get("/tweets/:username", (req, res) => {
   const { username } = req.params;
   const queryUser = users.find((user) => user.username === username);
-  
-  if(!queryUser){
+
+  if (!queryUser) {
     res.status(400).send("Usuário não encontrado");
-    return
+    return;
   }
 
   const userTweets = tweets.filter((tweet) => tweet.username === username);
-  if(userTweets.length===0){
+  if (userTweets.length === 0) {
     res.status(400).send("Não há tweets para esse usuário");
-    return
+    return;
   }
 
   const userImg = queryUser.avatar;
